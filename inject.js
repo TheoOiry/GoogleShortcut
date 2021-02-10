@@ -12,35 +12,60 @@
     document.head.append(style);
 })()
 
-let searches = Array.prototype.filter.call(document.getElementsByClassName("g"), (el) => {
-    return el.parentElement.classList.contains("hlcw0c")
-});
+//Filter on searches for escape google widgets, Vidéo page is not concerns so we accept all searches if it's Vidéo page
+let research = Array.prototype.filter.call(
+    document.getElementsByClassName("g"),
+    (el) => el.parentElement.classList.contains("hlcw0c") || window.location.href.includes("&tbm=vid"));
 
 let highlightedIndex = -1
 
 document.onkeydown = function (ke) {
     if (ke.key === "Enter" && highlightedIndex !== -1) {
-        let href = searches[highlightedIndex].querySelector("a").getAttribute("href")
-        if (ke.ctrlKey)
-            window.open(href, "_blank")
-        else
-            window.location.href = href
-    } else {
-        let lastIndex = highlightedIndex
-        if(ke.altKey && ke.key === "ArrowUp")
-            highlightedIndex = Math.max(highlightedIndex - 1, 0)
-        else if (ke.altKey && ke.key === "ArrowDown")
-            highlightedIndex = Math.min(highlightedIndex + 1, searches.length - 1)
+        openHighlighted(ke.ctrlKey)
+    } else if(ke.altKey) {
+        if(ke.key === "ArrowUp")
+            changeHighlight(false)
+        else if (ke.key === "ArrowDown")
+            changeHighlight(true)
+        //The navigation bar is different for the "image" page tab order is not the same
 
-        if(lastIndex !== highlightedIndex && highlightedIndex !== -1)
-        {
-            if(lastIndex !== -1)
-                searches[lastIndex].classList.remove("highlight")
-
-            searches[highlightedIndex].classList.add("highlight")
-            searches[highlightedIndex].focus()
-            searches[highlightedIndex].scrollIntoViewIfNeeded()
-        }
+        // else if (ke.key === "ArrowRight")
+        //     changeSearchMode(true)
+        // else if (ke.key === "ArrowLeft")
+        //     changeSearchMode(false)
     }
+}
 
+function changeSearchMode(isToNext){
+    let navigationTabs = [...document.querySelectorAll("div.hdtb-mitem")]
+
+    let newTabIndex = navigationTabs.findIndex(tab => tab.classList.contains("hdtb-msel")) + (isToNext ? 1 : -1)
+
+    if(newTabIndex >= 0 && newTabIndex < navigationTabs.length)
+        window.location.href = navigationTabs[newTabIndex].querySelector("a").getAttribute("href")
+}
+
+function openHighlighted(isNewTab){
+    let href = research[highlightedIndex].querySelector("a").getAttribute("href")
+    if (isNewTab)
+        window.open(href, "_blank")
+    else
+        window.location.href = href
+}
+
+function changeHighlight(isDown) {
+    if (research.length === 0)
+        return
+
+    let lastIndex = highlightedIndex
+    if(isDown)
+        highlightedIndex = Math.min(highlightedIndex + 1, research.length - 1)
+    else
+        highlightedIndex = Math.max(highlightedIndex - 1, 0)
+
+    if(lastIndex !== -1)
+        research[lastIndex].classList.remove("highlight")
+
+    research[highlightedIndex].classList.add("highlight")
+    research[highlightedIndex].scrollIntoViewIfNeeded()
 }
