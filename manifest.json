@@ -1,0 +1,30 @@
+{
+  "name": "Getting Started Example",
+  "version": "1.0",
+  "description": "Build an Extension!",
+  "permissions": ["declarativeContent","storage", "activeTab", "tabs",
+    "*://*.google.com/search",
+    "*://*.google.fr/search"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "page_action": {
+    "default_popup": "popup.html"
+  },
+  "commands": {
+    "Down": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Down"
+      },
+      "description": "OnDown"
+    },
+    "Up": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Up"
+      },
+      "description": "OnUp"
+    }
+  },
+  "manifest_version": 2
+}
