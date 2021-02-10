@@ -2,9 +2,7 @@
   "name": "Getting Started Example",
   "version": "1.0",
   "description": "Build an Extension!",
-  "permissions": ["declarativeContent","storage", "activeTab", "tabs",
-    "*://*.google.com/search",
-    "*://*.google.fr/search"],
+  "permissions": ["declarativeContent","storage", "activeTab", "tabs", "<all_url>"],
   "background": {
     "scripts": ["background.js"],
     "persistent": true
